@@ -1,0 +1,43 @@
+import { useId } from "react";
+import { cn } from "@/lib/utils";
+
+type LogoProps = {
+  className?: string;
+  /** Fill with the signature blue gradient instead of currentColor. */
+  gradient?: boolean;
+  title?: string;
+};
+
+/**
+ * Fuad Salma "FS" monogram.
+ * Single-color by default (inherits `currentColor`) so it adapts to the
+ * design system. Pass `gradient` to fill it with the signature blue gradient.
+ */
+export function Logo({ className, gradient = false, title = "Fuad Salma" }: LogoProps) {
+  const id = useId();
+  const gradientId = `fs-grad-${id}`;
+
+  return (
+    <svg
+      viewBox="0 0 321.81 633.04"
+      role="img"
+      aria-label={title}
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("block", className)}
+    >
+      {gradient && (
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#1D4ED8" />
+            <stop offset="50%" stopColor="#3B82F6" />
+            <stop offset="100%" stopColor="#60A5FA" />
+          </linearGradient>
+        </defs>
+      )}
+      <g fill={gradient ? `url(#${gradientId})` : "currentColor"}>
+        <path d="m274.91,147.4l27.98-30.77L160.91,0,0,173.67c65.87,53.68,131.74,107.36,197.61,161.03,9.33-10.26,18.65-20.51,27.98-30.77-23.53-19.26-47.05-38.51-70.58-57.77,19.95-21.45,39.89-42.89,59.84-64.34l-32.21-26.46c-19.81,21.54-39.63,43.09-59.44,64.63-20.7-17.04-41.39-34.08-62.09-51.12,34.58-37.3,69.16-74.6,103.74-111.9l110.07,90.42Z" />
+        <path d="m46.9,485.64l-27.98,30.77,141.98,116.64,160.91-173.67c-65.87-53.68-131.74-107.36-197.61-161.03-9.33,10.26-18.65,20.51-27.98,30.77,23.53,19.26,47.05,38.51,70.58,57.77-19.95,21.45-39.89,42.89-59.84,64.34l32.21,26.46c19.81-21.54,39.63-43.09,59.44-64.63,20.7,17.04,41.39,34.08,62.09,51.12-34.58,37.3-69.16,74.6-103.74,111.9l-110.07-90.42Z" />
+      </g>
+    </svg>
+  );
+}
