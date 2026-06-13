@@ -47,7 +47,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    n: "05", slug: "triangle", title: "Triangle", industry: "Food & Beverage", discipline: "Brand Identity · Motion", year: "2026", aspect: "landscape",
+    n: "05", slug: "triangle", title: "Triangle", industry: "Food & Beverage", discipline: "Brand Identity · Motion", year: "2025", aspect: "landscape",
     media: { type: "video", src: "/work/triangle.mp4", poster: "/work/triangle.jpg" },
     featured: true,
     loopHero: true,
@@ -88,7 +88,7 @@ export const projects: Project[] = [
 
   },
   {
-    n: "08", slug: "nook", title: "Nook", industry: "Tech · Startup", discipline: "Brand Identity · UI/UX · Web", year: "2022", aspect: "landscape",
+    n: "08", slug: "nook", title: "Nook", industry: "Tech · Startup", discipline: "Brand Identity · UI/UX · Web", year: "2024", aspect: "landscape",
     media: { type: "image", src: "/work/nook/hero.jpg" },
     gallery: [
       { type: "image", src: "/work/nook/macbook.jpg", span: "full" },
