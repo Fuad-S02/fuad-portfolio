@@ -62,7 +62,7 @@ export function WorkArchive() {
                       {p.discipline}
                     </p>
                   </div>
-                  <span className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10 transition-colors duration-300 group-hover:ring-blue/50" />
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 transition-colors duration-300 group-hover:ring-blue/50" />
                 </Link>
               </TiltCard>
             </motion.article>

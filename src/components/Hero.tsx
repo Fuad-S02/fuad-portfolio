@@ -85,22 +85,19 @@ export function Hero() {
         className="relative z-10 w-full"
       >
         <Reveal trigger="load" className="mx-auto w-full max-w-6xl">
-        <motion.p
-          variants={fadeUp}
-          className="font-mono text-xs uppercase tracking-[0.28em] text-muted"
-        >
-          Multidisciplinary Designer
-        </motion.p>
-
-        <motion.div
-          variants={fadeUp}
-          className="mt-4 inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/40 px-4 py-1.5 backdrop-blur-sm"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-blue" />
-          <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em]">
-            Technical + Creative
+        <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-2.5">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue pulse-dot" />
+            <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em]">
+              Multidisciplinary Designer
+            </span>
           </span>
-          <span className="h-1.5 w-1.5 rounded-full bg-blue" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue pulse-dot" />
+            <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-muted">
+              Technical + Creative
+            </span>
+          </span>
         </motion.div>
 
         <h1 className="mt-6 font-display text-[clamp(3rem,11vw,9rem)] font-extrabold uppercase leading-[0.86] tracking-[-0.035em]">

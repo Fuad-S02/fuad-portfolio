@@ -1,13 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { fadeUp } from "@/lib/motion";
 import { Reveal, MaskLine } from "./ui/reveal";
-
-// Smooth ease for the looping capability swap (matches the hero rotator).
-const CAP_EASE = [0.65, 0, 0.35, 1] as const;
+import { GooeyText } from "./ui/gooey-text-morphing";
 
 const capabilities = [
   "Brand Design",
@@ -61,17 +58,15 @@ export function About() {
           </motion.div>
         </Reveal>
 
-        {/* What I do — one big word, looping through the services */}
-        <div className="mt-20 border-t border-border pt-10 text-center">
-          <Reveal>
-            <motion.p
-              variants={fadeUp}
-              className="font-mono text-xs uppercase tracking-[0.28em] text-muted"
-            >
-              What I do
-            </motion.p>
-          </Reveal>
-          <CapabilityRotator />
+        {/* Services — gooey morphing between disciplines */}
+        <div className="mt-20 border-t border-border pt-14">
+          <GooeyText
+            texts={capabilities}
+            morphTime={1.7}
+            cooldownTime={0.9}
+            className="h-[clamp(3rem,11vw,6.5rem)] w-full"
+            textClassName="font-display text-[clamp(2rem,8vw,5rem)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-gradient"
+          />
         </div>
 
         {/* More work */}
@@ -107,53 +102,5 @@ export function About() {
         </Reveal>
       </div>
     </main>
-  );
-}
-
-const BIG_CAP =
-  "font-display text-[clamp(2rem,8vw,5rem)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-gradient";
-
-/** One big word that loops through the services with a rise/sink transition. */
-function CapabilityRotator() {
-  const reduce = useReducedMotion();
-  const [i, setI] = useState(0);
-
-  useEffect(() => {
-    if (reduce) return;
-    const id = setInterval(
-      () => setI((p) => (p + 1) % capabilities.length),
-      3000
-    );
-    return () => clearInterval(id);
-  }, [reduce]);
-
-  // Reduced motion → show the full static list instead of cycling.
-  if (reduce) {
-    return (
-      <ul className="mt-6 space-y-1">
-        {capabilities.map((c) => (
-          <li key={c} className={BIG_CAP}>
-            {c}
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  return (
-    <div className="relative mt-6 block overflow-hidden pb-[0.12em]">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={capabilities[i]}
-          initial={{ y: "42%", opacity: 0, filter: "blur(4px)" }}
-          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: "-42%", opacity: 0, filter: "blur(4px)" }}
-          transition={{ duration: 0.55, ease: CAP_EASE }}
-          className={`${BIG_CAP} [will-change:transform,opacity,filter]`}
-        >
-          {capabilities[i]}
-        </motion.div>
-      </AnimatePresence>
-    </div>
   );
 }

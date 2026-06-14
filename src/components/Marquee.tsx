@@ -6,7 +6,6 @@ const brands = [
   "Nook",
   "Hydralyte",
   "Taskrabbit",
-  "Toyota",
 ];
 
 const tools = [

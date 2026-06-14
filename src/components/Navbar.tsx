@@ -17,7 +17,7 @@ const NAV = [
 ];
 
 const EMAIL = "fuad-salma@outlook.com";
-const LINKEDIN = "https://www.linkedin.com/in/fuad-salma";
+const LINKEDIN = "https://www.linkedin.com/in/fuad-salma-944051224/";
 
 const panelStagger = {
   hidden: {},

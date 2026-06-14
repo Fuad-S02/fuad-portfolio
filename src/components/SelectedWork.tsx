@@ -99,13 +99,12 @@ function RowsLayout() {
                 className="relative block h-full w-full overflow-hidden rounded-2xl border border-border bg-surface"
               >
                 <ProjectMedia {...mediaProps(p.media, p.title)} />
-                <span className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5 transition-opacity duration-300 group-hover:ring-blue/40" />
+                <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/5 transition-opacity duration-300 group-hover:ring-blue/40" />
               </Link>
             </TiltCard>
 
             <div className={cn(flip && "lg:order-1")}>
               <div className="flex items-center gap-4">
-                <span className="font-mono text-sm text-blue">{p.n}</span>
                 <span className="h-px flex-1 bg-border" />
                 <span className="font-mono text-xs text-muted">{p.year}</span>
               </div>
@@ -203,10 +202,8 @@ function OverlayCard({
         </div>
         <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-          <div className="flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-white/70">
-            <span>{p.n}</span>
-            <span>·</span>
-            <span>{p.year}</span>
+          <div className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-white/70">
+            {p.year}
           </div>
           <h3 className={cn("mt-1.5 font-display font-bold tracking-tight text-white", titleClass)}>
             {p.title}
@@ -216,7 +213,7 @@ function OverlayCard({
             <OverlayTag>{p.discipline}</OverlayTag>
           </div>
         </div>
-        <span className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10 transition-colors duration-300 group-hover:ring-blue/50" />
+        <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 transition-colors duration-300 group-hover:ring-blue/50" />
       </Link>
     </TiltCard>
   );

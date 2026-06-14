@@ -15,7 +15,7 @@ import { staggerContainer, fadeUp, viewportOnce } from "@/lib/motion";
 import { MaskLine } from "./ui/reveal";
 
 const EMAIL = "fuad-salma@outlook.com";
-const LINKEDIN = "https://www.linkedin.com/in/fuad-salma";
+const LINKEDIN = "https://www.linkedin.com/in/fuad-salma-944051224/";
 const RESUME =
   "https://drive.google.com/file/d/16xBKdJ_9X3Bv5XQX377Z1eU67taD_ZBB/view?usp=sharing";
 
@@ -49,7 +49,7 @@ export function Contact() {
           variants={fadeUp}
           className="mb-7 flex items-center gap-2.5 font-mono text-xs uppercase tracking-[0.22em] text-muted"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-blue" />
+          <span className="h-1.5 w-1.5 rounded-full bg-blue pulse-dot" />
           Let&apos;s connect
         </motion.p>
 
