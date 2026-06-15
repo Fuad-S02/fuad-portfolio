@@ -11,8 +11,18 @@ import { useLenis } from "lenis/react";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { LiquidButton } from "./ui/liquid-glass-button";
-import { staggerContainer, fadeUp, viewportOnce } from "@/lib/motion";
+import { staggerContainer, fadeUp, viewportOnce, EASE } from "@/lib/motion";
 import { MaskLine } from "./ui/reveal";
+
+// Footer rises up a touch more than the standard reveal for an end-of-page lift.
+const footerStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.22, delayChildren: 0.08 } },
+};
+const footerItem = {
+  hidden: { opacity: 0, y: 90 },
+  show: { opacity: 1, y: 0, transition: { duration: 1.3, ease: EASE } },
+};
 
 const EMAIL = "fuad-salma@outlook.com";
 const LINKEDIN = "https://www.linkedin.com/in/fuad-salma-944051224/";
@@ -93,9 +103,18 @@ export function Contact() {
         </motion.div>
       </motion.div>
 
-      {/* Footer */}
-      <footer className="mx-auto mt-20 w-full max-w-6xl">
-        <div className="flex flex-col gap-8 border-t border-border pt-10 sm:flex-row sm:items-start sm:justify-between">
+      {/* Footer — rises up + fades in as you reach the bottom */}
+      <motion.footer
+        variants={footerStagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "0px 0px -80px 0px" }}
+        className="mx-auto mt-20 w-full max-w-6xl"
+      >
+        <motion.div
+          variants={reduce ? undefined : footerItem}
+          className="flex flex-col gap-8 border-t border-border pt-10 sm:flex-row sm:items-start sm:justify-between"
+        >
           <div className="max-w-xs">
             <Logo className="h-7 w-auto text-ink" />
             <p className="mt-4 text-sm">
@@ -125,9 +144,12 @@ export function Contact() {
               <span className="text-muted">Dubai, UAE</span>
             </FooterCol>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 font-mono text-[0.7rem] uppercase tracking-wider text-muted sm:flex-row sm:items-center sm:justify-between">
+        <motion.div
+          variants={reduce ? undefined : footerItem}
+          className="mt-10 flex flex-col gap-3 border-t border-border pt-6 font-mono text-[0.7rem] uppercase tracking-wider text-muted sm:flex-row sm:items-center sm:justify-between"
+        >
           <span>© 2026 Fuad Salma</span>
           <button
             type="button"
@@ -140,8 +162,8 @@ export function Contact() {
           >
             Back to top ↑
           </button>
-        </div>
-      </footer>
+        </motion.div>
+      </motion.footer>
     </section>
   );
 }
