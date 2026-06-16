@@ -27,7 +27,7 @@ const footerItem = {
 const EMAIL = "fuad-salma@outlook.com";
 const LINKEDIN = "https://www.linkedin.com/in/fuad-salma-944051224/";
 const RESUME =
-  "https://drive.google.com/file/d/16xBKdJ_9X3Bv5XQX377Z1eU67taD_ZBB/view?usp=sharing";
+  "https://drive.google.com/file/d/1qbYW2YdP-923hM1A7Y985XzbaoGRzWDG/view?usp=sharing";
 
 export function Contact() {
   const lenis = useLenis();

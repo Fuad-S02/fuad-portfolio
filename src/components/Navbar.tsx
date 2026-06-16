@@ -17,6 +17,8 @@ const NAV = [
 
 const EMAIL = "fuad-salma@outlook.com";
 const LINKEDIN = "https://www.linkedin.com/in/fuad-salma-944051224/";
+const RESUME =
+  "https://drive.google.com/file/d/1qbYW2YdP-923hM1A7Y985XzbaoGRzWDG/view?usp=sharing";
 
 const panelStagger = {
   hidden: {},
@@ -184,6 +186,14 @@ export function Navbar() {
                       className="transition-colors hover:text-blue"
                     >
                       LinkedIn ↗
+                    </a>
+                    <a
+                      href={RESUME}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-blue"
+                    >
+                      Resume ↗
                     </a>
                   </div>
 
