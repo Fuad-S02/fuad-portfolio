@@ -240,7 +240,11 @@ export function InteractiveGlobe({
       startRotY: rotYRef.current,
       startRotX: rotXRef.current,
     };
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    // Capture only mouse/pen. On touch, leave it free so the browser can take
+    // over a vertical swipe for page scroll (touch-action: pan-y handles this).
+    if (e.pointerType !== "touch") {
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    }
   }, []);
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragRef.current.active) return;
@@ -256,10 +260,11 @@ export function InteractiveGlobe({
   return (
     <canvas
       ref={canvasRef}
-      className={cn("h-full w-full cursor-grab touch-none active:cursor-grabbing", className)}
+      className={cn("h-full w-full cursor-grab touch-pan-y active:cursor-grabbing", className)}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
       aria-label="Interactive globe showing Amman and Dubai"
       role="img"
     />

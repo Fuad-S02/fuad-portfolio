@@ -29,14 +29,19 @@ type Dot = {
 };
 
 // Tuning.
-const GAP = 5; // grid step — denser (~7-8k dots in the field)
+const DOTS_ACROSS = 108; // dots across the field — grid step scales with size,
+// so the dot COUNT (and perf) stays bounded no matter how large the field gets.
 const FALLOFF = 0.64; // radial reach (× side) where BACKGROUND dots fade out
-const REPEL_RADIUS = 26;
-const REPEL_STRENGTH = 17;
-const SPRING = 0.16;
-const DAMPING = 0.8;
+const REPEL_RADIUS = 21; // tighter, cursor-sized
+const REPEL_STRENGTH = 20; // a touch stronger push
+const SPRING = 0.15;
+const DAMPING = 0.84; // springy wiggle/overshoot before settling
 const LIGHT_RADIUS = 58;
-const INFLUENCE = LIGHT_RADIUS + 34;
+const PRESS_RADIUS = 50; // sustained "pressure" dimple reach
+const PRESS_DEPTH = 7; // how far dots press outward (crater that wraps the cursor)
+const GLOBAL_FACTOR = 0.05; // whole-object lean toward the cursor (membrane wrap)
+const GLOBAL_MAX = 10; // cap (px) on the global lean
+const INFLUENCE = Math.max(LIGHT_RADIUS, PRESS_RADIUS) + 34;
 
 function inRoundRect(
   px: number,
@@ -66,7 +71,6 @@ export function LogoDotField({ className }: { className?: string }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
     const dark = theme === "dark";
     // Vertical colour gradient (cyan-white top → deep blue bottom) for the field.
     const top = dark ? [165, 215, 255] : [90, 150, 235];
@@ -86,12 +90,17 @@ export function LogoDotField({ className }: { className?: string }) {
       const rect = canvas.getBoundingClientRect();
       w = rect.width;
       h = rect.height;
+      if (w < 2 || h < 2) {
+        dots = [];
+        return; // not laid out yet — wait for the ResizeObserver
+      }
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const side = Math.min(h * 0.86, w * 0.9, 470);
+      const side = Math.min(h * 0.94, w * 0.82, 920);
+      const gap = Math.max(4, side / DOTS_ACROSS); // spacing scales with size
       const bx = (w - side) / 2;
       const by = (h - side) / 2;
       const r = side * CORNER_R(side);
@@ -113,8 +122,8 @@ export function LogoDotField({ className }: { className?: string }) {
       const img = octx.getImageData(0, 0, off.width, off.height).data;
 
       dots = [];
-      for (let gy = GAP / 2; gy < side; gy += GAP) {
-        for (let gx = GAP / 2; gx < side; gx += GAP) {
+      for (let gy = gap / 2; gy < side; gy += gap) {
+        for (let gx = gap / 2; gx < side; gx += gap) {
           const wx = bx + gx;
           const wy = by + gy;
           if (!inRoundRect(wx, wy, bx, by, side, r)) continue;
@@ -137,8 +146,8 @@ export function LogoDotField({ className }: { className?: string }) {
           // → small faint edges). LOGO dots stay large + bright across the WHOLE
           // monogram so the full shape reads evenly (only a gentle centre lift).
           const size = isLogo
-            ? GAP * 0.92 * (0.62 + 0.38 * rf)
-            : GAP * 0.78 * (0.26 + 0.74 * rf2) + 0.5;
+            ? gap * 0.92 * (0.62 + 0.38 * rf)
+            : gap * 0.78 * (0.26 + 0.74 * rf2) + 0.5;
           const alpha = isLogo
             ? Math.min(0.72 + 0.25 * rf, 1)
             : 0.44 * (0.28 + 0.72 * rf);
@@ -164,7 +173,7 @@ export function LogoDotField({ className }: { className?: string }) {
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
       let active = false;
-      const interactive = !reduce && !isTouch && pointer.inside;
+      const interactive = !reduce && pointer.inside;
       pointer.energy *= 0.86;
       if (pointer.energy < 0.02) pointer.energy = 0;
       const push = REPEL_STRENGTH * pointer.energy;
@@ -175,24 +184,52 @@ export function LogoDotField({ className }: { className?: string }) {
         const homed = d.x === d.hx && d.y === d.hy;
         let near = false;
         let lf = 0;
-        if (interactive) {
+        let tx = d.hx; // spring target (home, unless pressed)
+        let ty = d.hy;
+        // Everything is gated by movement energy `m`: the object only deforms
+        // WHILE the cursor moves. When it stops, `m` decays to 0 → targets fall
+        // back to home → the object reassembles to its rest shape.
+        const m = pointer.energy;
+        if (interactive && m > 0.01) {
+          // GLOBAL lean — the whole object wraps a little toward the cursor,
+          // like pressing one connected membrane. Scaled by movement.
+          const gx = pointer.x - d.hx;
+          const gy = pointer.y - d.hy;
+          const gd = Math.hypot(gx, gy) || 0.0001;
+          const gmag = Math.min(gd * GLOBAL_FACTOR, GLOBAL_MAX) * m;
+          tx += (gx / gd) * gmag;
+          ty += (gy / gd) * gmag;
+
           const ddx = d.x - pointer.x;
           const ddy = d.y - pointer.y;
           const d2 = ddx * ddx + ddy * ddy;
           if (d2 < inf2) {
             near = true;
             const dist = Math.sqrt(d2) || 0.0001;
+            if (dist < LIGHT_RADIUS) lf = (1 - dist / LIGHT_RADIUS) * m;
+            // Movement kick — outward impulse on fast sweeps (the wiggle).
             if (push > 0.05 && dist < REPEL_RADIUS) {
               const f = (1 - dist / REPEL_RADIUS) ** 2 * push;
               d.vx += (ddx / dist) * f;
               d.vy += (ddy / dist) * f;
             }
-            if (dist < LIGHT_RADIUS) lf = 1 - dist / LIGHT_RADIUS;
+            // Local PRESSURE dimple on top of the lean — a soft crater that wraps
+            // the cursor (pushed outward from home), also scaled by movement.
+            const hdx = d.hx - pointer.x;
+            const hdy = d.hy - pointer.y;
+            const hd = Math.hypot(hdx, hdy) || 0.0001;
+            if (hd < PRESS_RADIUS) {
+              const t = 1 - hd / PRESS_RADIUS;
+              const off = PRESS_DEPTH * t * t * (3 - 2 * t) * m; // smoothstep
+              tx += (hdx / hd) * off;
+              ty += (hdy / hd) * off;
+            }
           }
         }
 
-        // Fast path: untouched dot at home → stamp its cached rest colour.
-        if (!near && homed) {
+        // Fast path: when not interacting, an at-home dot just stamps its cached
+        // rest colour. (While interacting every dot leans, so all run physics.)
+        if (!interactive && homed) {
           if (d.style !== cur) {
             ctx.fillStyle = d.style;
             cur = d.style;
@@ -203,18 +240,20 @@ export function LogoDotField({ className }: { className?: string }) {
           continue;
         }
 
-        d.vx = (d.vx + (d.hx - d.x) * SPRING) * DAMPING;
-        d.vy = (d.vy + (d.hy - d.y) * SPRING) * DAMPING;
+        d.vx = (d.vx + (tx - d.x) * SPRING) * DAMPING;
+        d.vy = (d.vy + (ty - d.y) * SPRING) * DAMPING;
         d.x += d.vx;
         d.y += d.vy;
+        // Snap to the current target once slow. When the cursor is still the
+        // target IS home (effects gated to 0), so dots settle home and the loop
+        // halts; while moving the target shifts each frame so they keep chasing.
         if (
-          !near &&
-          Math.abs(d.x - d.hx) < 0.3 &&
-          Math.abs(d.y - d.hy) < 0.3 &&
-          Math.hypot(d.vx, d.vy) < 0.3
+          Math.abs(d.x - tx) < 0.4 &&
+          Math.abs(d.y - ty) < 0.4 &&
+          Math.hypot(d.vx, d.vy) < 0.25
         ) {
-          d.x = d.hx;
-          d.y = d.hy;
+          d.x = tx;
+          d.y = ty;
           d.vx = d.vy = 0;
         } else {
           active = true;
@@ -236,6 +275,8 @@ export function LogoDotField({ className }: { className?: string }) {
         ctx.fill();
       }
 
+      // Run while the cursor is moving (energy) or anything is still settling.
+      // A still cursor lets energy decay → dots reassemble home → loop halts.
       if (active || pointer.energy > 0.02) {
         raf = requestAnimationFrame(draw);
       } else {
@@ -249,7 +290,9 @@ export function LogoDotField({ className }: { className?: string }) {
       raf = requestAnimationFrame(draw);
     };
 
-    const onMove = (e: MouseEvent) => {
+    // Pointer events cover mouse, touch (drag), and pen — so it interacts on
+    // phone/tablet too (movement-gated, so a touch-drag deforms it).
+    const onMove = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
       const nx = e.clientX - rect.left;
       const ny = e.clientY - rect.top;
@@ -267,13 +310,30 @@ export function LogoDotField({ className }: { className?: string }) {
       pointer.x = pointer.y = -9999;
       start();
     };
+    // Safety net: if the pointer moves anywhere off the canvas, release — so a
+    // missed leave can never leave the field stuck leaning (and the loop always
+    // gets a chance to settle + halt).
+    const onWinMove = (e: PointerEvent) => {
+      if (!pointer.inside) return;
+      const r = canvas.getBoundingClientRect();
+      if (
+        e.clientX < r.left ||
+        e.clientX > r.right ||
+        e.clientY < r.top ||
+        e.clientY > r.bottom
+      ) {
+        onLeave();
+      }
+    };
 
     buildDots();
     draw();
 
-    if (!reduce && !isTouch) {
-      canvas.addEventListener("mousemove", onMove);
-      canvas.addEventListener("mouseleave", onLeave);
+    if (!reduce) {
+      canvas.addEventListener("pointermove", onMove);
+      canvas.addEventListener("pointerleave", onLeave);
+      canvas.addEventListener("pointercancel", onLeave);
+      window.addEventListener("pointermove", onWinMove);
     }
 
     const ro = new ResizeObserver(() => {
@@ -284,13 +344,24 @@ export function LogoDotField({ className }: { className?: string }) {
 
     return () => {
       cancelAnimationFrame(raf);
-      canvas.removeEventListener("mousemove", onMove);
-      canvas.removeEventListener("mouseleave", onLeave);
+      canvas.removeEventListener("pointermove", onMove);
+      canvas.removeEventListener("pointerleave", onLeave);
+      canvas.removeEventListener("pointercancel", onLeave);
+      window.removeEventListener("pointermove", onWinMove);
       ro.disconnect();
     };
   }, [theme, reduce]);
 
-  return <canvas ref={canvasRef} className={className} aria-hidden />;
+  // touch-action: pan-y → vertical swipes scroll the page (never trapped);
+  // horizontal drags still reach the field to interact.
+  return (
+    <canvas
+      ref={canvasRef}
+      className={className}
+      style={{ touchAction: "pan-y" }}
+      aria-hidden
+    />
+  );
 }
 
 // Rounded-square corner radius as a fraction of side.
