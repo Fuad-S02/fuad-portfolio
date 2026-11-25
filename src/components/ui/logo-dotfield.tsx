@@ -60,7 +60,14 @@ function inRoundRect(
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-export function LogoDotField({ className }: { className?: string }) {
+/** `tone` forces a palette regardless of the site theme (e.g. "light" on the white sheet). */
+export function LogoDotField({
+  className,
+  tone,
+}: {
+  className?: string;
+  tone?: "light" | "dark";
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduce = useReducedMotion();
   const { theme } = useTheme();
@@ -71,7 +78,7 @@ export function LogoDotField({ className }: { className?: string }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dark = theme === "dark";
+    const dark = tone ? tone === "dark" : theme === "dark";
     // Vertical colour gradient (cyan-white top → deep blue bottom) for the field.
     const top = dark ? [165, 215, 255] : [90, 150, 235];
     const bot = dark ? [44, 96, 220] : [40, 90, 210];
@@ -350,7 +357,7 @@ export function LogoDotField({ className }: { className?: string }) {
       window.removeEventListener("pointermove", onWinMove);
       ro.disconnect();
     };
-  }, [theme, reduce]);
+  }, [theme, reduce, tone]);
 
   // touch-action: pan-y → vertical swipes scroll the page (never trapped);
   // horizontal drags still reach the field to interact.

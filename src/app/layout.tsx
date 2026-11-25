@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Archivo, Space_Grotesk } from "next/font/google";
+import { Archivo, Geist } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { GlassFilter } from "@/components/ui/liquid-glass-button";
 import { ThemeProvider } from "@/components/theme";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Background } from "@/components/Background";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Navbar } from "@/components/Navbar";
+import { WorkSheet } from "@/components/WorkSheet";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/site";
 
@@ -17,10 +17,11 @@ const archivo = Archivo({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space",
+// Body + label font — a clean, neutral grotesk.
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -50,7 +51,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivo.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${archivo.variable} ${geist.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-bg font-sans text-ink">
         <Script src="/theme-init.js" strategy="beforeInteractive" />
@@ -59,8 +60,8 @@ export default function RootLayout({
           <SmoothScroll>
             <Background />
             <Navbar />
+            <WorkSheet />
             {children}
-            <ThemeToggle />
           </SmoothScroll>
           <LoadingScreen />
         </ThemeProvider>

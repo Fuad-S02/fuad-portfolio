@@ -4,7 +4,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from "react";
 
@@ -18,12 +17,6 @@ const ThemeContext = createContext<{
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("dark");
-
-  // Sync to whatever the no-FOUC script already applied.
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    setThemeState(isDark ? "dark" : "light");
-  }, []);
 
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t);
@@ -46,5 +39,5 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export const useTheme = () => useContext(ThemeContext);
 
-/** Inline script string for the document to prevent a theme flash. Defaults to dark. */
-export const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var dark = t ? t==='dark' : true;document.documentElement.classList.toggle('dark', dark);}catch(e){document.documentElement.classList.add('dark');}})();`;
+/** Inline script string for the document to prevent a theme flash. Theme is locked to dark. */
+export const themeInitScript = `(function(){document.documentElement.classList.add('dark');try{localStorage.removeItem('theme');}catch(e){}})();`;

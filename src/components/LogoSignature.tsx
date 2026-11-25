@@ -14,7 +14,7 @@ export function LogoSignature() {
         viewport={viewportOnce}
         className="flex w-full flex-col items-center"
       >
-        <LogoDotField className="h-[90vh] max-h-[1000px] min-h-[460px] w-full" />
+        <LogoDotField tone="light" className="h-[90vh] max-h-[1000px] min-h-[460px] w-full" />
       </motion.div>
     </section>
   );

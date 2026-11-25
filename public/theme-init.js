@@ -1,9 +1,8 @@
+// Theme is locked to dark (the toggle was removed). Clears any old saved
+// "light" choice so returning visitors aren't stuck in it.
 (function () {
+  document.documentElement.classList.add("dark");
   try {
-    var t = localStorage.getItem("theme");
-    var dark = t ? t === "dark" : true;
-    document.documentElement.classList.toggle("dark", dark);
-  } catch (e) {
-    document.documentElement.classList.add("dark");
-  }
+    localStorage.removeItem("theme");
+  } catch (e) {}
 })();

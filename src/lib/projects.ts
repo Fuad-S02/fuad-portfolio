@@ -30,7 +30,40 @@ export type Project = {
   gallery?: GalleryItem[];
 };
 
+const MT = "/work/maktabitech";
+
 export const projects: Project[] = [
+  /* ---- Latest — MaktabiTech, 2026 ---- */
+  {
+    n: "01", slug: "biggest-boardroom", title: "Saudi Arabia's Biggest Boardroom", industry: "Deep-Tech / AV", discipline: "AI Creative · Social Reel", year: "2026", aspect: "portrait",
+    media: { type: "video", src: `${MT}/biggest-boardroom.mp4`, poster: `${MT}/biggest-boardroom.jpg` },
+  },
+  {
+    n: "02", slug: "tesla-trend", title: "Tesla Trend", industry: "Deep-Tech / AV", discipline: "AI Creative · Trend Reel", year: "2026", aspect: "portrait",
+    media: { type: "video", src: `${MT}/tesla-trend.mp4`, poster: `${MT}/tesla-trend.jpg` },
+  },
+  {
+    n: "03", slug: "smart-workplace", title: "Smart Workplace Solutions", industry: "Deep-Tech / AV", discipline: "AI Creative · Brand Film", year: "2026", aspect: "landscape",
+    media: { type: "video", src: `${MT}/smart-workplace-ai.mp4`, poster: `${MT}/smart-workplace-ai.jpg` },
+  },
+  {
+    n: "04", slug: "smartphone-talk-back", title: "Smartphone Talk-Back", industry: "Deep-Tech / AV", discipline: "AI Creative · Product Film", year: "2026", aspect: "landscape",
+    media: { type: "video", src: `${MT}/smartphone-talk-back.mp4`, poster: `${MT}/smartphone-talk-back.jpg` },
+  },
+  {
+    n: "05", slug: "command-center", title: "Command Center", industry: "Deep-Tech / AV", discipline: "Motion Graphics · 2D Animation", year: "2026", aspect: "landscape",
+    media: { type: "video", src: `${MT}/command-center-motion.mp4`, poster: `${MT}/command-center-motion.jpg` },
+  },
+  {
+    n: "06", slug: "smart-parking", title: "Smart Parking", industry: "Deep-Tech / AV", discipline: "Product UI · Motion", year: "2026", aspect: "portrait",
+    media: { type: "video", src: `${MT}/smart-parking.mp4`, poster: `${MT}/smart-parking.jpg` },
+    loopHero: true,
+  },
+  {
+    n: "07", slug: "eid-mascot", title: "Robot Mascot — Eid Greetings", industry: "Deep-Tech / AV", discipline: "AI Creative · Motion", year: "2026", aspect: "portrait",
+    media: { type: "video", src: `${MT}/eid-al-fitr.mp4`, poster: `${MT}/eid-al-fitr.jpg` },
+    loopHero: true,
+  },
   { n: "01", slug: "office-assembling", title: "Smart Meeting Room Assembling", industry: "Deep-Tech / AV", discipline: "3D Motion · AI Creative", year: "2026", aspect: "landscape", featured: true, media: { type: "video", src: "/work/office-assembling.mp4", poster: "/work/office-assembling.jpg" } },
   { n: "02", slug: "retractable-screen", title: "Retractable Screen", industry: "Deep-Tech / AV", discipline: "CGI · Product Film", year: "2026", aspect: "portrait", featured: true, media: { type: "video", src: "/work/retractable-screen.mp4", poster: "/work/retractable-screen.jpg" } },
   { n: "03", slug: "audio-zoning", title: "Audio Zoning", industry: "Deep-Tech / AV", discipline: "Motion Graphics · Social", year: "2026", aspect: "landscape", featured: true, media: { type: "video", src: "/work/audio-zoning.mp4", poster: "/work/audio-zoning.jpg" } },

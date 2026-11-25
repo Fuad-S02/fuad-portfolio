@@ -36,8 +36,11 @@
   --color-blue: #3b82f6;
   --color-blue-light: #60a5fa;
 
-  --font-sans: var(--font-space), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  /* The `font-mono` utility is the site's small-label style (eyebrows,
+     counters, tags). It deliberately maps to a sans, not a code font. */
+  --font-mono: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Lenis smooth scroll (see SmoothScroll.tsx). Lenis owns scrolling, so we do
@@ -82,6 +85,69 @@ body {
   color: transparent;
 }
 
+/* Header sitting on the dark hero stage (HeroStage sets html[data-stage]). */
+html[data-stage="on"] header .nav-ink,
+html[data-stage="on"] header .nav-ink svg {
+  color: #f4f6fb;
+}
+/* Header over the white sheet (sphere + Experience; LightSheet sets html[data-surface]). */
+html[data-surface="light"] header .nav-ink,
+html[data-surface="light"] header .nav-ink svg {
+  color: #0a0b0d;
+}
+/* Get in touch pill over the white sheet: dark glass instead of white glass. */
+html[data-surface="light"] header .nav-pill {
+  border-color: rgb(10 11 13 / 0.15);
+  background-color: rgb(10 11 13 / 0.04);
+}
+html[data-surface="light"] header .nav-pill:hover {
+  background-color: rgb(10 11 13 / 0.08);
+}
+html[data-surface="light"] header .nav-pill .nav-pill-icon {
+  background-color: #0a0b0d;
+  color: #fff;
+}
+/* Get in touch hover: blue gradient fill (fades in via ::before), white text,
+   blue envelope on the white circle. Same on dark and white sections. */
+header .nav-pill {
+  position: relative;
+  isolation: isolate;
+  transition: color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+header .nav-pill::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, #60a5fa, #3b82f6 45%, #1d4ed8);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+header .nav-pill:hover::before {
+  opacity: 1;
+}
+html header .nav-pill:hover,
+html[data-stage] header .nav-pill:hover,
+html[data-surface] header .nav-pill:hover {
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 22px -8px rgb(37 99 235 / 0.7);
+}
+html header .nav-pill:hover .nav-pill-icon,
+html[data-surface] header .nav-pill:hover .nav-pill-icon {
+  background-color: #fff;
+  color: #1d4ed8;
+}
+/* The envelope follows its circle, not the .nav-ink svg recolour above. */
+html[data-stage] header .nav-pill .nav-pill-icon svg,
+html[data-surface] header .nav-pill .nav-pill-icon svg {
+  color: inherit;
+}
+html[data-stage="on"] header .nav-ink:hover {
+  background-color: rgb(255 255 255 / 0.1);
+}
+
 /* Soft pulsing blue status dots */
 @keyframes pulseDot {
   0%,
@@ -99,6 +165,44 @@ body {
 }
 
 /* Marquee ticker */
+/* Hero scroll cue (desktop): mouse wheel dot slides down and fades. */
+@keyframes scrollWheel {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(9px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(9px);
+    opacity: 0;
+  }
+}
+
+/* Hero scroll cue: chevron drifts down and fades, then rests. */
+@keyframes scrollCue {
+  0% {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(4px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(4px);
+    opacity: 0;
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);

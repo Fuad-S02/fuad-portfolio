@@ -52,15 +52,16 @@ function Row({
   );
 }
 
+/** Client + tools marquee, styled for the white sheet. */
 export function Marquee() {
   return (
-    <section className="relative overflow-hidden border-y border-border py-10 sm:py-14">
-      <p className="mb-7 px-6 text-center font-mono text-[0.7rem] uppercase tracking-[0.28em] text-muted sm:px-10">
+    <section className="relative overflow-hidden border-y border-black/10 py-10 text-[#0a0b0d] sm:py-14">
+      <p className="mb-7 px-6 text-center font-mono text-[0.7rem] uppercase tracking-[0.28em] text-[#5b616e] sm:px-10">
         Brands shaped · tools mastered
       </p>
-      <div className="flex flex-col gap-4 text-ink/80">
+      <div className="flex flex-col gap-4 text-[#0a0b0d]/80">
         <Row items={brands} />
-        <Row items={tools} reverse className="text-muted" />
+        <Row items={tools} reverse className="text-[#5b616e]" />
       </div>
     </section>
   );
