@@ -51,7 +51,7 @@ export function LoadingScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-7 bg-white px-6 dark:bg-[#080a0f]"
+          className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-8 bg-white px-6 dark:bg-[#080a0f]"
         >
           <motion.video
             ref={videoRef}
@@ -63,14 +63,14 @@ export function LoadingScreen() {
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="h-[clamp(72px,14vh,130px)] w-auto mix-blend-multiply dark:invert dark:mix-blend-screen"
+            className="h-[clamp(120px,24vh,240px)] w-auto mix-blend-multiply dark:invert dark:mix-blend-screen"
           />
 
           <motion.h1
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="text-center font-display text-[clamp(2rem,7vw,4.5rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.03em] text-[#0a0b0d] dark:text-white"
+            className="text-center font-display text-[clamp(1.25rem,3.2vw,2.5rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.03em] text-[#0a0b0d] dark:text-white"
           >
             <span className="block">Creativity</span>
             <span className="relative block overflow-hidden pb-[0.08em]">
